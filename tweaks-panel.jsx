@@ -154,6 +154,33 @@ const __TWEAKS_STYLE = `
   .twk-chip>span>i:first-child{box-shadow:none}
   .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
     filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+
+  /* MOBILE RESPONSIVE */
+  @media (max-width: 768px) {
+    .twk-panel{width:calc(100% - 32px);max-width:300px;bottom:12px;right:16px;
+      max-height:50vh;font-size:10.5px}
+    .twk-hd{padding:8px 10px}
+    .twk-hd b{font-size:11px}
+    .twk-body{padding:2px 10px 10px;font-size:10.5px;gap:8px}
+    .twk-field{height:24px;padding:0 6px;font-size:10px}
+    .twk-slider{margin:4px 0}
+    .twk-lbl{font-size:9px}
+    .twk-val{font-size:8px}
+  }
+  @media (max-width: 480px) {
+    .twk-panel{width:calc(100% - 20px);max-width:none;bottom:8px;right:10px;
+      max-height:45vh;font-size:9.5px;transform:scale(0.92);transform-origin:bottom right}
+    .twk-hd{padding:6px 8px}
+    .twk-hd b{font-size:10px}
+    .twk-body{padding:2px 8px 8px;font-size:9.5px;gap:6px}
+    .twk-field{height:22px;padding:0 6px;font-size:9px}
+    .twk-slider{height:3px;margin:3px 0}
+    .twk-slider::-webkit-slider-thumb{width:12px;height:12px}
+    .twk-slider::-moz-range-thumb{width:12px;height:12px}
+    .twk-lbl{font-size:8px}
+    .twk-val{font-size:7px}
+    .twk-chip{height:40px}
+  }
 `;
 
 // ── useTweaks ───────────────────────────────────────────────────────────────

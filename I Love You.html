@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>I love you</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -292,6 +293,138 @@
   .font-serif  { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-style: italic; font-weight: 500; }
   .font-script { font-family: 'Caveat', 'Brush Script MT', cursive; font-weight: 500; }
   .font-sans   { font-family: 'Inter', system-ui, sans-serif; font-weight: 400; letter-spacing: .02em; }
+
+  /* ────────────────────────────────────────────
+     MOBILE RESPONSIVE STYLES
+     ──────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    body {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .stage {
+      position: relative;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+
+    .heart-wrap {
+      width: min(95vw, 95vh * (800/720)) !important;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,.12));
+    }
+
+    .intro-title {
+      font-size: clamp(32px, 7vw, 64px);
+      line-height: 1.1;
+    }
+
+    .intro-sub {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .page-title {
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      gap: 8px;
+    }
+
+    .page-title .brand {
+      font-size: 14px;
+    }
+
+    .page-title .meta {
+      font-size: 9px;
+    }
+
+    .page-foot {
+      bottom: 16px;
+      font-size: 9px;
+      letter-spacing: .2em;
+    }
+
+    .intro-inner {
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .intro-cta {
+      padding: 14px 28px 13px;
+      font-size: 11px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .stage {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .heart-wrap {
+      width: min(98vw, 98vh * (800/720)) !important;
+      margin: 20px auto;
+    }
+
+    .intro-title {
+      font-size: clamp(24px, 6vw, 48px);
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-title {
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-title .brand {
+      font-size: 12px;
+    }
+
+    .page-title .meta {
+      font-size: 8px;
+    }
+
+    .intro-sub {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .intro-cta {
+      padding: 12px 22px 11px;
+      font-size: 10px;
+      letter-spacing: .2em;
+    }
+  }
+
+  @media (orientation: landscape) and (max-height: 600px) {
+    .intro {
+      padding: 16px;
+    }
+
+    .intro-inner {
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .intro-title {
+      font-size: clamp(20px, 5vw, 48px);
+      line-height: 1.1;
+    }
+
+    .intro-sub {
+      display: none;
+    }
+
+    .intro-eyebrow {
+      font-size: 9px;
+      margin-bottom: 4px;
+    }
+  }
 </style>
 </head>
 <body>
