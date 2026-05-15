@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>I love you</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500&family=Caveat:wght@400;500;700&display=swap" rel="stylesheet" />
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
 <style>
   *, *::before, *::after { box-sizing: border-box; }
@@ -20,8 +23,15 @@
     background: var(--bg);
     color: var(--ink);
     overflow: hidden;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     transition: background 0.8s ease;
     -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
 
   /* Detect dark theme */
@@ -39,6 +49,8 @@
   .stage {
     position: fixed;
     inset: 0;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
     display: grid;
     place-items: center;
     background: radial-gradient(ellipse 120% 120% at 50% 40%, var(--bg-hi) 0%, var(--bg) 60%);
@@ -136,7 +148,7 @@
     font-weight: 400;
   }
   .page-foot {
-    position: fixed; bottom: 22px; left: 0; right: 0;
+    position: fixed; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0;
     text-align: center; color: var(--ink);
     font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
     pointer-events: none;
