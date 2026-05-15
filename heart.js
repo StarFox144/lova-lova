@@ -68,21 +68,26 @@ function Heart() {
 
   // Vertical layout: rows positioned across the heart, sizes scale with density
   const density = Math.max(8, Math.min(60, t.density | 0));
+  
+  // Adjust density for mobile for better rendering
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const adjustedDensity = isMobile && density > 30 ? Math.floor(density * 0.85) : density;
+  
   const rows = useMemo(() => {
     const arr = [];
     const yStart = 50;
     const yEnd   = 668;
-    const step   = (yEnd - yStart) / (density - 1);
-    for (let i = 0; i < density; i++) {
+    const step   = (yEnd - yStart) / (adjustedDensity - 1);
+    for (let i = 0; i < adjustedDensity; i++) {
       arr.push({ i, y: yStart + i * step });
     }
     return arr;
-  }, [density]);
+  }, [adjustedDensity]);
 
-  const fontSize = Math.max(10, Math.min(40, 720 / density * 0.82));
+  const fontSize = Math.max(10, Math.min(40, 720 / adjustedDensity * 0.82));
 
   // Mark the “special” center row — slightly bigger, just the phrase, centered
-  const centerIdx = Math.floor(density / 2);
+  const centerIdx = Math.floor(adjustedDensity / 2);
 
   const fontClass =
     t.fontStyle === "script" ? "font-script" :
