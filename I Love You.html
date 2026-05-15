@@ -16,8 +16,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
 <style>
-  *, *::before, *::after { box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; height: 100%; }
+  html { height: -webkit-fill-available; }
   body {
     font-family: 'Inter', system-ui, sans-serif;
     background: var(--bg);
@@ -25,6 +26,8 @@
     overflow: hidden;
     min-height: 100vh;
     min-height: -webkit-fill-available;
+    min-height: 100dvh;
+    overscroll-behavior: none;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
     transition: background 0.8s ease;
@@ -51,6 +54,7 @@
     inset: 0;
     min-height: 100vh;
     min-height: -webkit-fill-available;
+    min-height: 100dvh;
     display: grid;
     place-items: center;
     background: radial-gradient(ellipse 120% 120% at 50% 40%, var(--bg-hi) 0%, var(--bg) 60%);
@@ -129,7 +133,7 @@
   body.phase-heart .page-foot  { opacity: .35; }
 
   .page-title {
-    position: fixed; top: 24px; left: 28px; right: 28px;
+    position: fixed; top: calc(24px + env(safe-area-inset-top, 0px)); left: 28px; right: 28px;
     display: flex; justify-content: space-between; align-items: baseline;
     pointer-events: none;
     color: var(--ink);
@@ -243,6 +247,7 @@
     text-transform: uppercase;
     padding: 16px 34px 15px;
     cursor: pointer;
+    touch-action: manipulation;
     border-radius: 999px;
     overflow: hidden;
     transition: color .35s ease, transform .25s ease, border-color .35s ease;
@@ -271,7 +276,21 @@
     transition: transform .35s ease;
   }
   .intro-cta:hover .ico { transform: translateX(4px); }
-  
+
+  @media (hover: none) and (pointer: coarse) {
+    .intro-cta:hover { color: var(--ink); transform: none; }
+    .intro-cta:hover::before { transform: scaleX(0); }
+    .intro-cta:active {
+      color: var(--bg);
+      transform: scale(0.97);
+      transition-duration: 0.1s;
+    }
+    .intro-cta:active::before {
+      transform: scaleX(1);
+      transition-duration: 0.1s;
+    }
+  }
+
   @media (max-width: 768px) {
     .intro-cta {
       padding: 13px 26px 12px;
@@ -394,9 +413,9 @@
     }
 
     .page-title {
-      top: 16px;
-      left: 16px;
-      right: 16px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      left: calc(16px + env(safe-area-inset-left, 0px));
+      right: calc(16px + env(safe-area-inset-right, 0px));
       gap: 8px;
     }
 
@@ -422,6 +441,7 @@
     .intro-cta {
       padding: 14px 28px 13px;
       font-size: 11px;
+      min-height: 44px;
     }
     
     /* Optimize animations for mobile */
