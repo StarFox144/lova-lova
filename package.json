@@ -1,0 +1,13 @@
+{
+  "name": "lova-lova",
+  "version": "1.0.0",
+  "description": "A beautiful heart composed of love phrases in multiple languages",
+  "private": true,
+  "scripts": {
+    "dev": "npx http-server -p 3000 -c-1",
+    "start": "npx http-server"
+  },
+  "keywords": ["love", "heart", "react", "interactive"],
+  "author": "",
+  "license": "MIT"
+}
