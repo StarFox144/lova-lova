@@ -582,6 +582,24 @@
         radial-gradient(ellipse 100% 100% at 50% 50%, var(--bg-hi) 0%, var(--bg) 80%);
     }
   }
+
+  #error-bubble {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 99999;
+    max-width: calc(100% - 32px);
+    max-height: 35vh;
+    overflow: auto;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(0,0,0,.86);
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -640,6 +658,25 @@
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); reveal(); }
     });
   })();
+</script>
+<script>
+  function __showPageError(message) {
+    var bubble = document.getElementById('error-bubble');
+    if (!bubble) {
+      bubble = document.createElement('div');
+      bubble.id = 'error-bubble';
+      document.body.appendChild(bubble);
+    }
+    bubble.textContent = 'Page error: ' + message;
+    bubble.style.display = 'block';
+  }
+  window.addEventListener('error', function (event) {
+    __showPageError(event.message + ' (' + event.filename + ':' + event.lineno + ')');
+  });
+  window.addEventListener('unhandledrejection', function (event) {
+    var reason = event.reason && event.reason.message ? event.reason.message : String(event.reason);
+    __showPageError('Unhandled promise rejection: ' + reason);
+  });
 </script>
 
 <script type="text/babel" src="tweaks-panel.jsx"></script>
