@@ -24,6 +24,18 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Detect dark theme */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+    }
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      color-scheme: light;
+    }
+  }
+
   .stage {
     position: fixed;
     inset: 0;

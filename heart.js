@@ -25,9 +25,17 @@ const PHRASES = {
   "我爱你":           "我爱你",
 };
 
+// Detect dark theme preference
+const getDefaultPalette = () => {
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'noir' : 'ardent';
+  }
+  return 'ardent';
+};
+
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "phrase": "I love you",
-  "paletteName": "ardent",
+  "paletteName": getDefaultPalette(),
   "density": 26,
   "fontStyle": "serif",
   "showOutline": true,
