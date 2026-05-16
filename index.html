@@ -34,18 +34,19 @@
     -webkit-font-smoothing: antialiased;
     touch-action: manipulation;
     -webkit-user-select: none;
+    user-select: none;
     -webkit-touch-callout: none;
   }
 
-  /* Default CSS variables — overridden by React on mount */
   :root {
     --bg: #faf4ee;
     --bg-hi: #fbe9e2;
     --ink: #b71d3c;
     --accent: #e23d5a;
+    --beat-dur: 1.6s;
+    --beat-delay: 4s;
   }
 
-  /* Detect dark theme */
   @media (prefers-color-scheme: dark) {
     :root {
       color-scheme: dark;
@@ -56,9 +57,7 @@
     }
   }
   @media (prefers-color-scheme: light) {
-    :root {
-      color-scheme: light;
-    }
+    :root { color-scheme: light; }
   }
 
   .stage {
@@ -72,42 +71,35 @@
     background: radial-gradient(ellipse 120% 120% at 50% 40%, var(--bg-hi) 0%, var(--bg) 60%);
     transition: background 0.8s ease;
   }
-  
-  /* Enhanced background for mobile */
-  @media (max-width: 768px) {
-    .stage {
-      background: 
-        radial-gradient(circle at 20% 80%, rgba(255,255,255,.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0,0,0,.05) 0%, transparent 50%),
-        radial-gradient(ellipse 100% 100% at 50% 50%, var(--bg-hi) 0%, var(--bg) 70%);
-    }
-  }
 
   .heart-wrap {
     position: relative;
     width: min(92vw, 86vh * (800/720));
     aspect-ratio: 800 / 720;
     filter: drop-shadow(0 30px 60px rgba(0,0,0,.08));
+    opacity: 0;
+    transform: scale(.4);
+    transform-origin: center 56%;
+    transition: opacity 1.4s ease, transform 1.6s cubic-bezier(.2,.8,.2,1);
   }
-  
-  @media (max-width: 768px) {
-    .heart-wrap {
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,.12));
-    }
+  body.phase-heart .heart-wrap {
+    opacity: 1;
+    transform: scale(1);
   }
-
 
   .heart-svg { width: 100%; height: 100%; display: block; overflow: visible; }
 
-  /* Heartbeat — subtle, double-pulse */
-  .beat { transform-origin: 400px 380px; animation: beat 1.6s ease-in-out infinite; animation-delay: 4s; }
+  .beat {
+    transform-origin: 400px 380px;
+    animation: beat var(--beat-dur) ease-in-out var(--beat-delay) infinite;
+    will-change: transform;
+  }
   @keyframes beat {
     0%, 18%, 36%, 100% { transform: scale(1); }
     10%   { transform: scale(1.018); }
     26%   { transform: scale(1.028); }
   }
 
-  /* Outline stroke draw-in */
   .outline {
     fill: none;
     stroke: var(--ink);
@@ -121,7 +113,6 @@
   }
   @keyframes draw { to { stroke-dashoffset: 0; } }
 
-  /* Each row of text fades in */
   .row {
     opacity: 0;
     animation: fadeRow .9s ease-out forwards;
@@ -131,7 +122,6 @@
     to   { opacity: var(--row-op, 1); transform: translateY(0); }
   }
 
-  /* The flowing border phrase */
   .border-text {
     opacity: 0;
     animation: fadeIn 1.2s ease 3.2s forwards;
@@ -139,7 +129,11 @@
   }
   @keyframes fadeIn { to { opacity: 1; } }
 
-  /* Page chrome — hidden until heart phase */
+  .row, .outline, .border-text { animation-play-state: paused; }
+  body.phase-heart .row,
+  body.phase-heart .outline,
+  body.phase-heart .border-text { animation-play-state: running; }
+
   .page-title, .page-foot { opacity: 0; transition: opacity 1.2s ease 1s; }
   body.phase-heart .page-title { opacity: .55; }
   body.phase-heart .page-foot  { opacity: .35; }
@@ -171,28 +165,13 @@
     z-index: 5;
   }
 
-  /* ────────────────────────────────────────────
-     INTRO SCENE
-     ──────────────────────────────────────────── */
   .intro {
     position: fixed; inset: 0;
     display: grid; place-items: center;
-    background: 
-      radial-gradient(circle at 30% 70%, rgba(255,255,255,.04) 0%, transparent 40%),
-      radial-gradient(circle at 70% 30%, rgba(0,0,0,.06) 0%, transparent 40%),
-      radial-gradient(ellipse 130% 130% at 50% 50%, var(--bg-hi) 0%, var(--bg) 75%);
+    background: radial-gradient(ellipse 130% 130% at 50% 50%, var(--bg-hi) 0%, var(--bg) 75%);
     z-index: 20;
     text-align: center;
     transition: opacity .9s ease, transform 1.2s cubic-bezier(.65,.05,.36,1), filter .9s ease;
-  }
-  
-  @media (max-width: 768px) {
-    .intro {
-      background: 
-        radial-gradient(circle at 30% 70%, rgba(255,255,255,.03) 0%, transparent 35%),
-        radial-gradient(circle at 70% 30%, rgba(0,0,0,.04) 0%, transparent 35%),
-        radial-gradient(ellipse 100% 100% at 50% 50%, var(--bg-hi) 0%, var(--bg) 80%);
-    }
   }
   .intro.is-leaving {
     opacity: 0;
@@ -235,7 +214,6 @@
   }
 
   .intro-sub {
-    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 300;
     font-size: 15px;
     line-height: 1.6;
@@ -276,10 +254,7 @@
     transition: transform .45s cubic-bezier(.65,.05,.36,1);
     z-index: -1;
   }
-  .intro-cta:hover {
-    color: var(--bg);
-    transform: translateY(-1px);
-  }
+  .intro-cta:hover { color: var(--bg); transform: translateY(-1px); }
   .intro-cta:hover::before { transform: scaleX(1); }
   .intro-cta:active { transform: translateY(0); }
   .intro-cta .ico {
@@ -289,33 +264,6 @@
   }
   .intro-cta:hover .ico { transform: translateX(4px); }
 
-  @media (hover: none) and (pointer: coarse) {
-    .intro-cta:hover { color: var(--ink); transform: none; }
-    .intro-cta:hover::before { transform: scaleX(0); }
-    .intro-cta:active {
-      color: var(--bg);
-      transform: scale(0.97);
-      transition-duration: 0.1s;
-    }
-    .intro-cta:active::before {
-      transform: scaleX(1);
-      transition-duration: 0.1s;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .intro-cta {
-      padding: 13px 26px 12px;
-      border-width: 1.5px;
-    }
-  }
-  @media (max-width: 480px) {
-    .intro-cta {
-      padding: 11px 20px 10px;
-    }
-  }
-
-  /* tiny pre-heart icon that becomes the real heart */
   .intro-seed {
     width: 14px; height: 14px;
     background: var(--accent);
@@ -346,27 +294,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ────────────────────────────────────────────
-     HEART REVEAL — wraps the heart after intro
-     ──────────────────────────────────────────── */
-  .heart-wrap {
-    opacity: 0;
-    transform: scale(.4);
-    transform-origin: center 56%;
-    transition: opacity 1.4s ease, transform 1.6s cubic-bezier(.2,.8,.2,1);
-  }
-  body.phase-heart .heart-wrap {
-    opacity: 1;
-    transform: scale(1);
-  }
-  /* Defer row/outline/border animations until heart phase */
-  .row, .outline, .border-text { animation-play-state: paused; }
-  body.phase-heart .row,
-  body.phase-heart .outline,
-  body.phase-heart .border-text { animation-play-state: running; }
-  body.phase-heart .beat { /* heartbeat kicks in normally via its own delay */ }
-
-  /* Floating petals */
   .petal {
     position: fixed;
     width: 8px; height: 8px;
@@ -384,12 +311,24 @@
     100% { transform: translateY(-20vh) rotate(540deg) scale(1); opacity: 0; }
   }
 
-  /* Font flavors */
   .font-serif  { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-style: italic; font-weight: 500; }
   .font-script { font-family: 'Caveat', 'Brush Script MT', cursive; font-weight: 500; }
   .font-sans   { font-family: 'Inter', system-ui, sans-serif; font-weight: 400; letter-spacing: .02em; }
 
-  /* Reduced motion: skip animations and show elements immediately */
+  @media (hover: none) and (pointer: coarse) {
+    .intro-cta:hover { color: var(--ink); transform: none; }
+    .intro-cta:hover::before { transform: scaleX(0); }
+    .intro-cta:active {
+      color: var(--bg);
+      transform: scale(0.97);
+      transition-duration: 0.1s;
+    }
+    .intro-cta:active::before {
+      transform: scaleX(1);
+      transition-duration: 0.1s;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .intro-seed, .intro-eyebrow, .intro-title, .intro-sub, .intro-cta {
       opacity: 1 !important;
@@ -398,40 +337,18 @@
     }
   }
 
-  /* ────────────────────────────────────────────
-     MOBILE RESPONSIVE STYLES
-     ──────────────────────────────────────────── */
   @media (max-width: 768px) {
-    body {
-      overflow-y: auto;
-      overflow-x: hidden;
-      scrollbar-width: none;
-    }
-    body::-webkit-scrollbar {
-      display: none;
-    }
-
-    .stage {
-      position: fixed;
-      inset: 0;
-      min-height: 100vh;
-      padding: 0;
-    }
+    :root { --beat-dur: 1.8s; --beat-delay: 5s; }
 
     .heart-wrap {
-      width: min(95vw, 95vh * (800/720)) !important;
+      width: min(95vw, 95vh * (800/720));
       filter: drop-shadow(0 20px 40px rgba(0,0,0,.12));
     }
 
-    .intro-title {
-      font-size: clamp(32px, 7vw, 64px);
-      line-height: 1.1;
-    }
-
-    .intro-sub {
-      font-size: 13px;
-      line-height: 1.5;
-    }
+    .intro-title { font-size: clamp(32px, 7vw, 64px); line-height: 1.1; }
+    .intro-sub { font-size: 13px; line-height: 1.5; }
+    .intro-inner { padding: 20px; gap: 20px; }
+    .intro-cta { padding: 14px 28px 13px; border-width: 1.5px; font-size: 11px; min-height: 44px; }
 
     .page-title {
       top: calc(16px + env(safe-area-inset-top, 0px));
@@ -439,201 +356,38 @@
       right: calc(16px + env(safe-area-inset-right, 0px));
       gap: 8px;
     }
-
-    .page-title .brand {
-      font-size: 14px;
-    }
-
-    .page-title .meta {
-      font-size: 9px;
-    }
-
-    .page-foot {
-      bottom: 16px;
-      font-size: 9px;
-      letter-spacing: .2em;
-    }
-
-    .intro-inner {
-      padding: 20px;
-      gap: 20px;
-    }
-
-    .intro-cta {
-      padding: 14px 28px 13px;
-      font-size: 11px;
-      min-height: 44px;
-    }
-    
-    /* Optimize animations for mobile */
-    .beat {
-      animation: beat 1.8s ease-in-out infinite !important;
-      animation-delay: 5s !important;
-    }
-    
-    .petal {
-      animation: float 18s linear infinite !important;
-    }
+    .page-title .brand { font-size: 14px; }
+    .page-title .meta { font-size: 9px; }
+    .page-foot { bottom: 16px; font-size: 9px; letter-spacing: .2em; }
   }
 
   @media (max-width: 480px) {
-    .stage {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+    :root { --beat-dur: 2s; --beat-delay: 6s; }
 
     .heart-wrap {
-      width: min(98vw, 98vh * (800/720)) !important;
+      width: min(98vw, 98vh * (800/720));
       margin: 20px auto;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,.08));
     }
 
-    .intro-title {
-      font-size: clamp(24px, 6vw, 48px);
-      margin: 0;
-      padding: 0;
-    }
+    .intro-title { font-size: clamp(24px, 6vw, 48px); margin: 0; }
+    .intro-sub { font-size: 12px; line-height: 1.4; }
+    .intro-cta { padding: 12px 22px 11px; font-size: 10px; letter-spacing: .2em; }
 
-    .page-title {
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .page-title .brand {
-      font-size: 12px;
-    }
-
-    .page-title .meta {
-      font-size: 8px;
-    }
-
-    .intro-sub {
-      font-size: 12px;
-      line-height: 1.4;
-    }
-
-    .intro-cta {
-      padding: 12px 22px 11px;
-      font-size: 10px;
-      letter-spacing: .2em;
-    }
-    
-    /* Further optimize animations */
-    .beat {
-      animation: beat 2s ease-in-out infinite !important;
-      animation-delay: 6s !important;
-    }
-    
-    .petal {
-      animation: float 20s linear infinite !important;
-    }
-    
-    /* Reduce shadow on very small screens */
-    .heart-wrap {
-      filter: drop-shadow(0 12px 24px rgba(0,0,0,.08)) !important;
-    }
+    .page-title { flex-direction: column; gap: 4px; }
+    .page-title .brand { font-size: 12px; }
+    .page-title .meta { font-size: 8px; }
   }
 
   @media (orientation: landscape) and (max-height: 600px) {
-    .intro {
-      padding: 16px;
-    }
-
-    .intro-inner {
-      gap: 12px;
-      padding: 12px;
-    }
-
-    .intro-title {
-      font-size: clamp(20px, 5vw, 48px);
-      line-height: 1.1;
-    }
-
-    .intro-sub {
-      display: none;
-    }
-
-    .intro-eyebrow {
-      font-size: 9px;
-      margin-bottom: 4px;
-    }
-    
-    .page-title {
-      top: 12px;
-      left: 16px;
-      right: 16px;
-    }
-    
-    .page-foot {
-      bottom: 12px;
-      font-size: 8px;
-    }
-  }
-  
-  @media (orientation: landscape) and (max-height: 600px) and (max-width: 768px) {
-    .heart-wrap {
-      max-height: 80vh;
-      width: auto;
-    }
-    
-    .stage {
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      padding: 10px;
-    }
-  }
-
-  /* DARK THEME SUPPORT */
-  @media (prefers-color-scheme: dark) {
-    .stage {
-      background: 
-        radial-gradient(circle at 20% 80%, rgba(255,255,255,.02) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,.04) 0%, transparent 50%),
-        radial-gradient(ellipse 120% 120% at 50% 40%, var(--bg-hi) 0%, var(--bg) 60%);
-    }
-    
-    .intro {
-      background: 
-        radial-gradient(circle at 30% 70%, rgba(255,255,255,.02) 0%, transparent 40%),
-        radial-gradient(circle at 70% 30%, rgba(255,255,255,.04) 0%, transparent 40%),
-        radial-gradient(ellipse 130% 130% at 50% 50%, var(--bg-hi) 0%, var(--bg) 75%);
-    }
-  }
-  
-  @media (prefers-color-scheme: dark) and (max-width: 768px) {
-    .stage {
-      background: 
-        radial-gradient(circle at 20% 80%, rgba(255,255,255,.015) 0%, transparent 45%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,.03) 0%, transparent 45%),
-        radial-gradient(ellipse 100% 100% at 50% 50%, var(--bg-hi) 0%, var(--bg) 75%);
-    }
-    
-    .intro {
-      background: 
-        radial-gradient(circle at 30% 70%, rgba(255,255,255,.015) 0%, transparent 35%),
-        radial-gradient(circle at 70% 30%, rgba(255,255,255,.03) 0%, transparent 35%),
-        radial-gradient(ellipse 100% 100% at 50% 50%, var(--bg-hi) 0%, var(--bg) 80%);
-    }
-  }
-  
-  @media (prefers-color-scheme: light) and (max-width: 768px) {
-    .stage {
-      background: 
-        radial-gradient(circle at 20% 80%, rgba(0,0,0,.01) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0,0,0,.02) 0%, transparent 50%),
-        radial-gradient(ellipse 100% 100% at 50% 50%, var(--bg-hi) 0%, var(--bg) 75%);
-    }
-    
-    .intro {
-      background: 
-        radial-gradient(circle at 30% 70%, rgba(0,0,0,.01) 0%, transparent 35%),
-        radial-gradient(circle at 70% 30%, rgba(0,0,0,.015) 0%, transparent 35%),
-        radial-gradient(ellipse 100% 100% at 50% 50%, var(--bg-hi) 0%, var(--bg) 80%);
-    }
+    .intro { padding: 16px; }
+    .intro-inner { gap: 12px; padding: 12px; }
+    .intro-title { font-size: clamp(20px, 5vw, 48px); line-height: 1.1; }
+    .intro-sub { display: none; }
+    .intro-eyebrow { font-size: 9px; margin-bottom: 4px; }
+    .page-title { top: 12px; left: 16px; right: 16px; }
+    .page-foot { bottom: 12px; font-size: 8px; }
+    .heart-wrap { max-height: 80vh; width: auto; }
   }
 
   #error-bubble {
